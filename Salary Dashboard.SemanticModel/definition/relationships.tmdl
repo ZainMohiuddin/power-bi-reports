@@ -1,0 +1,135 @@
+relationship 125fe34a-20a8-4636-aa26-0c6a007d5da7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Terminated_Employee_Data.'Hire Date'
+	toColumn: LocalDateTable_b11304a6-2c2a-4146-b8f3-b964b8affa6d.Date
+
+relationship ca49c1c0-fea8-4aea-8a58-58e9908d0fd0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Corrected_Salary_Change_Data.'Effective Start Date'
+	toColumn: LocalDateTable_02d3e7aa-a8d3-464a-8751-d7f737b0042a.Date
+
+relationship b5ed58c0-69c2-47ed-ba42-4a7153f4e416
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Corrected_Salary_Change_Data.'Effective End Date'
+	toColumn: LocalDateTable_a090b6b9-bb6b-4d1c-9252-0017c2113420.Date
+
+relationship AutoDetected_f42f24b1-29dd-499e-b28a-92aef46dd584
+	fromColumn: Employee_Data.Department
+	toColumn: dDepartment.Department
+
+relationship 4bceb818-1ea8-8c44-3e11-a5c73c9b5479
+	fromColumn: Employee_Data.'Employee ID'
+	toColumn: Unique_ID.'Employee ID'
+
+relationship e465e502-33ef-1d66-cb14-01a2abfd9d07
+	fromColumn: Corrected_Salary_Change_Data.'Employee ID'
+	toColumn: Unique_ID.'Employee ID'
+
+relationship c92d541c-3c4a-4567-963d-e750a7baced5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Corrected_Salary_Change_Data.'Hire Date'
+	toColumn: LocalDateTable_45b256de-6817-432a-a1e2-9b71d7e3c1f2.Date
+
+relationship a0069d2b-e310-d636-821c-f7ffd398a399
+	fromColumn: Terminated_Employee_Data.'Employee ID'
+	toColumn: Unique_ID.'Employee ID'
+
+relationship 1ff07ce6-3470-e13e-647e-02444845e80d
+	fromColumn: Terminated_Employee_Data.Department
+	toColumn: dDepartment.Department
+
+relationship bec4ddc3-ed2b-8754-7685-6d28b376cac5
+	fromColumn: Employee_Data.SlabsID
+	toColumn: 'Salary Slabs'.SlabsID
+
+relationship 31954456-b5ed-e366-91b2-51faef1faa44
+	fromColumn: EmployeeDateTable.'Secondary Key'
+	toColumn: Corrected_Salary_Change_Data.'Primary Key'
+
+relationship af678266-a062-49f3-a9ed-f819a9a9ddfe
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Corrected_Salary_Change_Data.'Termination Date'
+	toColumn: LocalDateTable_f6e98b68-ca86-42da-808e-a75e1d6c1566.Date
+
+relationship 8a4bcb17-92aa-48fa-8896-38142ed56d70
+	joinOnDateBehavior: datePartOnly
+	fromColumn: EmployeeDateTable.'Term Date'
+	toColumn: LocalDateTable_6ea86dd2-ad88-4552-87a3-19cb9b098419.Date
+
+relationship 5c84b724-7038-4097-9430-aaf85e22c9a0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Corrected_Salary_Change_Data.'EOM Term Date'
+	toColumn: LocalDateTable_1318d568-522b-4eb0-8b7e-376f462a181a.Date
+
+relationship d70f48ef-8e5e-44eb-a635-ed17b1939d6f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: EmployeeDateTable.'Termination Date'
+	toColumn: LocalDateTable_8217d6c6-4c17-44fd-bac9-53a75718e648.Date
+
+relationship 1606f0af-05bc-47b9-92df-bb78e12622ac
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Terminated_Employee.'Hire Date'
+	toColumn: LocalDateTable_9d5fca0c-7d8f-4891-9374-3cd83ec9f75a.Date
+
+relationship c6102312-2835-40ed-85f8-4d01d3d54355
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Terminated_Employee.'Term Date'
+	toColumn: LocalDateTable_f51c6ea9-47d4-4e9b-94bd-cb0845e1ba04.Date
+
+relationship 7716214b-922c-6487-420a-8de89853cce0
+	fromColumn: Employee_Data.'Employee ID'
+	toColumn: Terminated_Employee.'Employee ID'
+
+relationship d740651f-ca2c-46cd-813c-a4a722fc4bd3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Corrected_Salary_Change_Data.TerminationDate
+	toColumn: LocalDateTable_495587dd-75b8-4daf-9834-adf80056c72e.Date
+
+relationship cfbb2f25-d3ef-bd15-5626-3f527826d3ca
+	fromColumn: 'Monthly Salary'.SlabsID
+	toColumn: 'Salary Slabs'.SlabsID
+
+relationship 2dae9017-7a9d-e590-2f1c-ba3937797ad6
+	fromColumn: 'Monthly Salary'.TenureID
+	toColumn: 'Tenure Slabs'.TenureID
+
+relationship 2cff655d-359d-61aa-21b6-94c7b9f37f4e
+	fromColumn: 'Monthly Salary'.Department
+	toColumn: dDepartment.Department
+
+relationship 60ab3483-a4b1-42bc-9152-57ec220f03ec
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Calendar.Date
+	toColumn: LocalDateTable_d9e6c46a-1ebb-4a79-a413-bcf53c877250.Date
+
+relationship 9b94339a-1a3c-c386-8a66-9a36a0cb4a2c
+	fromColumn: Employee_Data.'Hire Date'
+	toColumn: Calendar.Date
+
+relationship 3c2801c9-a37d-cb89-3ecd-98d7f3bc4d02
+	fromColumn: Corrected_Salary_Change_Data.'Next Change Date'
+	toColumn: Calendar.Date
+
+relationship f011ec29-8354-b025-81a1-ea85675ee05d
+	fromColumn: Terminated_Employee_Data.'Term Date'
+	toColumn: Calendar.Date
+
+relationship 3ca0059c-cb47-113a-583a-0629c229607e
+	fromColumn: 'Monthly Salary'.EOM
+	toColumn: Calendar.Date
+
+relationship b8c81ddf-42d0-463e-acd0-85bec8814df4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: EmployeeDateTable.Date
+	toColumn: LocalDateTable_655a22a1-bf79-47e0-8602-3d285132c293.Date
+
+relationship ba8346c3-c992-46df-8f33-c9dc2a8d0716
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Calendar.EOM
+	toColumn: LocalDateTable_474f8782-69a9-4939-997b-30ed3c3dfb57.Date
+
+relationship 4acf6c7d-d20b-4a9e-bed4-86f92dd67e65
+	joinOnDateBehavior: datePartOnly
+	fromColumn: EmployeeDateTable.EOM
+	toColumn: LocalDateTable_21eaccd1-6edf-4898-baa5-618f78f92a0d.Date
+

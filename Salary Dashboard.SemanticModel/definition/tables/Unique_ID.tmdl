@@ -1,0 +1,27 @@
+table Unique_ID
+	lineageTag: d092fe23-bede-4dc6-92cf-a805f3224bd3
+
+	column 'Employee ID'
+		dataType: string
+		lineageTag: 4303c52a-1401-4ac6-99c5-7e539b74c726
+		summarizeBy: none
+		sourceColumn: Employee ID
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Unique_ID = m
+		mode: import
+		source =
+				let
+				    Source = Employee_Data,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"Employee ID"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns")
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

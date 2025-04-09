@@ -1,0 +1,25 @@
+table dDepartment
+	lineageTag: d0c63637-0b5b-4fd8-be4c-8dcc45111625
+
+	column Department
+		dataType: string
+		lineageTag: 91ef654b-86e2-4122-acb6-60debbaa5035
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dDepartment = m
+		mode: import
+		source =
+				let
+				    Source = Employee_Data,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"Department"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns")
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,96 @@
+table 'Monthly Salary'
+	lineageTag: be5559c1-a20a-4c94-884a-8c8fcac61734
+
+	column 'Employee ID'
+		lineageTag: dcef5479-9b2d-4304-89ae-a979044d6dd0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: EmployeeDateTable[Employee ID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		lineageTag: cd5a1c49-0b29-45f2-b084-6219f4469546
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: EmployeeDateTable[Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column EOM
+		formatString: mm/dd/yyyy
+		lineageTag: c73184ad-72ad-4db4-8deb-8f1fb6e53e05
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: EmployeeDateTable[EOM]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column SALARY
+		lineageTag: 01247df8-cf76-4a99-81c5-8a99bffb7ba7
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [SALARY]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SlabsID
+		formatString: 0
+		lineageTag: 334af962-145a-4e7b-afbf-0a7044f0056b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: EmployeeDateTable[SlabsID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tenure of Service'
+		formatString: 0
+		lineageTag: b25694aa-7c2b-4b76-898e-db099daf9bdc
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: EmployeeDateTable[Tenure of Service]
+
+		annotation SummarizationSetBy = Automatic
+
+	column TenureID
+		formatString: 0
+		lineageTag: 202ff3b4-34ca-491a-9d9e-0153a7f3966e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: EmployeeDateTable[TenureID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Department
+		lineageTag: 6a7181f4-2ae2-45d7-aa41-ef2e59bc72a5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: EmployeeDateTable[Department]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Active/Inactive
+		lineageTag: 4480e0cb-bb1d-4681-9952-6e2ba7e6b7da
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: EmployeeDateTable[Active/Inactive]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Monthly Salary' = calculated
+		mode: import
+		source =
+				
+				FILTER(
+				SUMMARIZE(EmployeeDateTable,EmployeeDateTable[Employee ID],EmployeeDateTable[Department],EmployeeDateTable[Tenure of Service],EmployeeDateTable[TenureID],EmployeeDateTable[SlabsID],EmployeeDateTable[Name],EmployeeDateTable[Active/Inactive],EmployeeDateTable[EOM],"SALARY",MIN(EmployeeDateTable[Monthly Salary]))
+				,[SALARY]<>BLANK()
+				)
+
+	annotation PBI_Id = 44b51038a78344878f7c51b359ca9746
+

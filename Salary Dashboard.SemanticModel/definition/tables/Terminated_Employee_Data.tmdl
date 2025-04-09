@@ -1,0 +1,88 @@
+table Terminated_Employee_Data
+	lineageTag: 84775422-0424-4ed5-89fb-e7cf1f5e97c0
+
+	column 'Employee ID'
+		dataType: string
+		lineageTag: 49043a16-cf57-42d5-bdea-dbc063b14f1d
+		summarizeBy: none
+		sourceColumn: Employee ID
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		dataType: string
+		lineageTag: b2808b82-07cb-4b8b-a668-e1d48c5d7ae7
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Salary
+		dataType: double
+		lineageTag: 54a4dd9a-747c-48fc-8ffd-8734205b29eb
+		summarizeBy: sum
+		sourceColumn: Salary
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Department
+		dataType: string
+		lineageTag: 823d5477-ddac-495f-a76f-8c2eab8517b0
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hire Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1d75e2fc-1c41-4c1f-845e-4c8e9cce49de
+		summarizeBy: none
+		sourceColumn: Hire Date
+
+		variation Variation
+			isDefault
+			relationship: 125fe34a-20a8-4636-aa26-0c6a007d5da7
+			defaultHierarchy: LocalDateTable_b11304a6-2c2a-4146-b8f3-b964b8affa6d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Term Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: dd49ee92-76a0-4b95-86a6-f06d175678e5
+		summarizeBy: none
+		sourceColumn: Term Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Term Year' = YEAR(Terminated_Employee_Data[Term Date])
+		formatString: 0
+		lineageTag: 85ec59d6-ad78-4f2e-a8d4-5d940124eb33
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Terminated_Employee_Data = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("D:\ZM Analytics\Freelance Projects\Mine\Marc Cohen\Employee_Data.xlsx"), null, true),
+				    Terminated_Employee_Data_Sheet = Source{[Item="Terminated_Employee_Data",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Terminated_Employee_Data_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Employee ID", Int64.Type}, {"Name", type text}, {"Salary", type number}, {"Department", type text}, {"Hire Date", type date}, {"Term Date", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

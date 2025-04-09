@@ -1,0 +1,90 @@
+table Calendar
+	lineageTag: 3d5a31d0-5826-43ad-a65c-48c1694d92a1
+
+	column Date
+		formatString: mm/dd/yyyy
+		lineageTag: ff5efa9d-8fac-4733-a004-7f3067b4841d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: 60ab3483-a4b1-42bc-9152-57ec220f03ec
+			defaultHierarchy: LocalDateTable_d9e6c46a-1ebb-4a79-a413-bcf53c877250.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column Month
+		formatString: 0
+		lineageTag: c92ead31-facc-409a-a3cf-65104997ce7a
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		lineageTag: 3a6a29a2-f300-4ce5-8403-5561526b54c3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthName]
+		sortByColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 7b1cbb77-9295-4b07-bee8-4728bfbe9d58
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: c853b77a-0bd1-4a0d-baa0-db56c7aefe78
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column EOM
+		formatString: General Date
+		lineageTag: 9c794c12-0c85-4d69-9519-1fcde776f50a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [EOM]
+
+		variation Variation
+			isDefault
+			relationship: ba8346c3-c992-46df-8f33-c9dc2a8d0716
+			defaultHierarchy: LocalDateTable_474f8782-69a9-4939-997b-30ed3c3dfb57.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendar = calculated
+		mode: import
+		source = ```
+				
+				Var Min_Date=MIN(Employee_Data[Hire Date])
+				Var Max_Date=EOMONTH(TODAY(),0)
+				RETURN
+				ADDCOLUMNS(
+				CALENDAR(Min_Date,Max_Date)
+				,"Month",MONTH([Date])
+				,"MonthName",FORMAT([Date],"Mmm")
+				,"Year",YEAR([Date])
+				,"Quarter","Q-"&QUARTER([Date])
+				,"EOM",EOMONTH([Date],0)
+				)
+				
+				```
+
+	annotation PBI_Id = b13e0c0e8aeb487ea223edea7a1e53da
+

@@ -1,0 +1,153 @@
+table Corrected_Salary_Change_Data
+	lineageTag: f2aa18c8-1f7a-47c2-b788-d043e80be317
+
+	column 'Employee ID'
+		dataType: string
+		lineageTag: 2a58c3af-81ef-4f6e-82ae-e6f81aded2ae
+		summarizeBy: none
+		sourceColumn: Employee ID
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Effective Start Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0c97a850-250b-41e7-8f67-c22cdf9eade9
+		summarizeBy: none
+		sourceColumn: Effective Start Date
+
+		variation Variation
+			isDefault
+			relationship: ca49c1c0-fea8-4aea-8a58-58e9908d0fd0
+			defaultHierarchy: LocalDateTable_02d3e7aa-a8d3-464a-8751-d7f737b0042a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'New Base Salary'
+		dataType: double
+		lineageTag: 45cf937c-5263-448e-8160-bf528a400f5c
+		summarizeBy: sum
+		sourceColumn: New Base Salary
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Next Change Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: b53caa98-8e67-4e87-86b7-a1945b29df78
+		summarizeBy: none
+		sourceColumn: Next Change Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Effective End Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4c027c99-70ec-4c7e-bf84-c2ba38afcb8a
+		summarizeBy: none
+		sourceColumn: Effective End Date
+
+		variation Variation
+			isDefault
+			relationship: b5ed58c0-69c2-47ed-ba42-4a7153f4e416
+			defaultHierarchy: LocalDateTable_a090b6b9-bb6b-4d1c-9252-0017c2113420.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Hire Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: edc8380f-1d38-4925-84f9-e6bd8497c4e3
+		summarizeBy: none
+		sourceColumn: Hire Date
+
+		variation Variation
+			isDefault
+			relationship: c92d541c-3c4a-4567-963d-e750a7baced5
+			defaultHierarchy: LocalDateTable_45b256de-6817-432a-a1e2-9b71d7e3c1f2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Termination Date'
+		dataType: dateTime
+		formatString: mm/dd/yyyy
+		lineageTag: d4e85f84-784a-4f80-a5de-7e77262c041a
+		summarizeBy: none
+		sourceColumn: Termination Date
+
+		variation Variation
+			isDefault
+			relationship: af678266-a062-49f3-a9ed-f819a9a9ddfe
+			defaultHierarchy: LocalDateTable_f6e98b68-ca86-42da-808e-a75e1d6c1566.'Date Hierarchy'
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column 'Primary Key' = Corrected_Salary_Change_Data[Employee ID]&"-"&Corrected_Salary_Change_Data[Effective Start Date]
+		lineageTag: 34b5a097-3b26-4b71-949a-0d97216f5140
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EOM Term Date' = EOMONTH(Corrected_Salary_Change_Data[TerminationDate],0)
+		formatString: General Date
+		lineageTag: e82e6652-7cd8-4e79-a863-3d96f75fd760
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 5c84b724-7038-4097-9430-aaf85e22c9a0
+			defaultHierarchy: LocalDateTable_1318d568-522b-4eb0-8b7e-376f462a181a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column TerminationDate = IF(Corrected_Salary_Change_Data[Termination Date]=BLANK(),TODAY(),Corrected_Salary_Change_Data[Termination Date])
+		formatString: mm/dd/yy
+		lineageTag: 8ec1074a-bfce-4b62-a9f8-e96e7042b0c2
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: d740651f-ca2c-46cd-813c-a4a722fc4bd3
+			defaultHierarchy: LocalDateTable_495587dd-75b8-4daf-9834-adf80056c72e.'Date Hierarchy'
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	partition Corrected_Salary_Change_Data = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("D:\ZM Analytics\Freelance Projects\Mine\Marc Cohen\Employee_Data.xlsx"), null, true),
+				    Corrected_Salary_Change_Data_Sheet = Source{[Item="Corrected_Salary_Change_Data",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Corrected_Salary_Change_Data_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Employee ID", Int64.Type}, {"Effective Start Date", type date}, {"New Base Salary", type number}, {"Next Change Date", type date}, {"Effective End Date", type date}, {"Hire Date", type date}, {"Termination Date", type any}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

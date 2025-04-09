@@ -1,0 +1,297 @@
+table Measure
+	lineageTag: 2fa3f256-7094-464e-afb2-90b1b340cad7
+
+	measure 'Running Salary' =
+			
+			CALCULATE(
+			CALCULATE(SUM('Monthly Salary'[SALARY])
+			,ALL('Calendar'[Year])
+			)
+			,YEAR('Monthly Salary'[EOM])<=SELECTEDVALUE('Calendar'[Year])
+			)
+		formatString: #,0
+		lineageTag: 989bda68-94f3-4229-93db-2d38aafe2110
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure '% Running Salary' =
+			
+			Var Current_Salary=CALCULATE(SUM(Employee_Data[Salary]))
+			
+			Var Running_Salary=
+			CALCULATE(
+			CALCULATE(SUM(Employee_Data[Salary])
+			,ALL('Calendar'[Year])
+			)
+			,Employee_Data[Hire Year]<=SELECTEDVALUE('Calendar'[Year])
+			)
+			
+			RETURN
+			DIVIDE(Current_Salary,Running_Salary)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: eb16c2d1-dc69-4318-ade6-b0af1d6b8122
+
+	measure Salary =
+			
+			Var Current_Salary=CALCULATE(SUM(Employee_Data[Salary]))
+			
+			Var Running_Salary=
+			CALCULATE(
+			CALCULATE(SUM(Employee_Data[Salary])
+			,ALL('Calendar'[Year])
+			)
+			,Employee_Data[Hire Year]<=SELECTEDVALUE('Calendar'[Year])
+			)
+			
+			RETURN
+			Current_Salary
+		lineageTag: 080c2fdd-fe7b-4f1f-8eb9-bd7442e782a5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Hires Count' = CALCULATE(DISTINCTCOUNT(Employee_Data[Employee ID]))
+		formatString: 0
+		lineageTag: 74684e84-eb21-49c6-9de9-c4ad30eb450f
+
+	measure 'Running Employee Hires' =
+			
+			CALCULATE(
+			CALCULATE(DISTINCTCOUNT(Employee_Data[Employee ID])
+			,ALL('Calendar'[Year])
+			)
+			,Employee_Data[Hire Year]<=SELECTEDVALUE('Calendar'[Year])
+			)
+		formatString: 0
+		lineageTag: 3cdf5d23-cd00-4a9a-9b74-f943578d0c3e
+
+	measure 'Employee Terminated' = CALCULATE(DISTINCTCOUNT(Terminated_Employee_Data[Employee ID]))
+		formatString: 0
+		lineageTag: 5bfdc6db-f811-41ef-8798-1ec9cab55afb
+
+	measure 'Running Employee Terminate' =
+			
+			CALCULATE(
+			CALCULATE(DISTINCTCOUNT(Terminated_Employee_Data[Employee ID])
+			,ALL('Calendar'[Year])
+			)
+			,Terminated_Employee_Data[Term Year]<=SELECTEDVALUE('Calendar'[Year])
+			)
+		formatString: 0
+		lineageTag: 8acb31c1-2f82-459f-bd48-dd845f950544
+
+	measure 'Employees Count' =
+			
+			[Hires Count]-
+			[Employee Terminated]
+		formatString: 0
+		lineageTag: 605c7d16-a0ee-4642-b321-381111db4166
+
+	measure 'Running Employee Count' =
+			
+			CALCULATE(
+			CALCULATE(COUNTA('Monthly Salary'[Employee ID])
+			,ALL('Calendar'[Year])
+			)
+			,YEAR('Monthly Salary'[EOM])<=SELECTEDVALUE('Calendar'[Year])
+			)
+		formatString: 0
+		lineageTag: a0e62f38-42a8-4480-b585-f2a70b2f3a86
+
+	measure 'Average Salary' =
+			
+			DIVIDE(
+			    // [Salary.]
+			[Salary Current]
+			,
+			CALCULATE(
+			CALCULATE(DISTINCTCOUNT(Employee_Data[Employee ID])
+			,Employee_Data[Active/Inactive]="Active"
+			,ALL('Calendar'[Year])
+			)
+			,Employee_Data[Hire Year]<=SELECTEDVALUE('Calendar'[Year])
+			)
+			
+			)
+		formatString: #,0
+		lineageTag: 5c4f07d3-0c99-4b8b-8585-160b3da02468
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Total Departments' = DISTINCTCOUNT(dDepartment[Department])
+		formatString: 0
+		lineageTag: 48c55289-d17e-4b35-a604-558d22196854
+
+	measure Headcount = DISTINCTCOUNT('Monthly Salary'[Employee ID])
+		formatString: 0
+		lineageTag: 4cf6f63f-5927-43f4-bab5-6ea60a99233e
+
+	measure 'Salary.' = CALCULATE(SUM('Monthly Salary'[SALARY]))
+		formatString: #,0
+		lineageTag: 3e720afe-0b73-4efe-bc9b-48ec012c67d1
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Salary LY' = CALCULATE(SUM('Monthly Salary'[SALARY]),SAMEPERIODLASTYEAR('Calendar'[Date]))
+		lineageTag: 5d585e86-9fef-4fe2-9220-58cd01d13d88
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Measure
+		lineageTag: 8e1a9ec8-83ff-40af-9be1-756051e2b6d6
+
+		annotation 43dbc3e8-3a1c-4b6f-9923-b49ff7d6691c = True
+
+	measure 'Headcount LY' = CALCULATE([Headcount],SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: 0
+		lineageTag: 9532b8df-6dab-4db2-9072-47c2e2e9cc4b
+
+	measure 'Salary YTD' = CALCULATE(SUM('Monthly Salary'[SALARY]),DATESYTD('Calendar'[Date]))
+		formatString: #,0
+		lineageTag: d3acea4e-ad81-4716-934e-87dd0efdbcd4
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Salary LY YTD' = CALCULATE([Salary YTD],SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: #,0
+		lineageTag: 8a2fc7de-2c2e-4c58-b68e-1f552b81a6f1
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Salary YoY%' = ([Salary YTD]-[Salary LY YTD])/[Salary LY YTD]
+		formatString: 0%;-0%;0%
+		lineageTag: 59498fdd-985f-4af4-b32e-054842a82f61
+
+	measure 'Salary Current' = CALCULATE([Salary.],LASTDATE('Monthly Salary'[EOM]))
+		formatString: #,0
+		lineageTag: d0ed2c95-229c-444e-b18e-7144c3b7f395
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Hires Count YTD' = CALCULATE(DISTINCTCOUNT(Employee_Data[Employee ID]),DATESYTD('Calendar'[Date]))
+		formatString: 0
+		lineageTag: 0c912023-1723-4ce2-ad76-3923f2359dcd
+
+	measure 'Hires Count LY' = CALCULATE([Hires Count],SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: 0
+		lineageTag: 9a77eaba-a706-4b1f-9ba7-e66a5d92f9c9
+
+	measure 'Hires Count LY YTD' = CALCULATE([Hires Count YTD],SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: 0
+		lineageTag: 30e5eb49-4962-46ac-9f0d-ae53e7b82cc9
+
+	measure 'Hires Count YoY%' = ([Hires Count]-[Hires Count LY])/[Hires Count LY]
+		formatString: 0%;-0%;0%
+		lineageTag: e0fde11e-44e1-4418-981f-49a27c8719dd
+
+	measure 'Leavers Count' = CALCULATE(DISTINCTCOUNT(Terminated_Employee_Data[Employee ID]))
+		formatString: 0
+		lineageTag: 7009ddd7-6b52-44dd-a4fa-2f578c1b7f90
+
+	measure 'Leavers Count LY' = CALCULATE([Leavers Count],SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: 0
+		lineageTag: 873022a2-ff57-4d7d-839a-c21bf9ff3e84
+
+	measure 'Leavers Count YTD' = CALCULATE(DISTINCTCOUNT(Terminated_Employee_Data[Employee ID]),DATESYTD('Calendar'[Date]))
+		formatString: 0
+		lineageTag: faa61101-9ef8-4861-8725-b2f35b2380da
+
+	measure 'Leavers Count LY YTD' = CALCULATE([Leavers Count YTD],SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: 0
+		lineageTag: 3b387e43-3fba-4db3-8b52-e429c1d6a8a5
+
+	measure 'Leavers Count YoY%' = ([Leavers Count]-[Leavers Count LY])/[Leavers Count LY]
+		formatString: 0%;-0%;0%
+		lineageTag: b9f01109-ea49-4244-adb3-3e71fc8228cc
+
+	measure 'Total Running Avg Salary' =
+			
+			
+			Var SalCurr=CALCULATE([Salary.],LASTDATE('Monthly Salary'[EOM]))
+			
+			Var Emp_Count=
+			CALCULATE(DISTINCTCOUNT(Employee_Data[Employee ID]),
+			Employee_Data[Active/Inactive]="Active",
+			FILTER(ALL('Calendar'),'Calendar'[Date]<=MAX('Calendar'[Date])))
+			// CALCULATE(
+			// CALCULATE(DISTINCTCOUNT(Employee_Data[Employee ID])
+			// ,Employee_Data[Active/Inactive]="Active"
+			// ,ALL('Calendar')
+			// )
+			// ,Employee_Data[Hire Date]<=
+			// // SELECTEDVALUE(
+			//     date(2025,02,17)
+			//     // )
+			// )
+			
+			Return
+			Divide(
+			    SalCurr,
+			    Emp_Count
+			)
+		formatString: #,0
+		lineageTag: 067b49c8-f34e-4c57-9e89-86290e99d325
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Total Running Active Head Count' =
+			
+			
+			Var SalCurr=CALCULATE([Salary.],LASTDATE('Monthly Salary'[EOM]))
+			
+			Var Emp_Count=
+			CALCULATE(DISTINCTCOUNT(Employee_Data[Employee ID]),
+			Employee_Data[Active/Inactive]="Active",
+			FILTER(ALL('Calendar'),'Calendar'[Date]<=MAX('Calendar'[Date])))
+			// CALCULATE(
+			// CALCULATE(DISTINCTCOUNT(Employee_Data[Employee ID])
+			// ,Employee_Data[Active/Inactive]="Active"
+			// ,ALL('Calendar')
+			// )
+			// ,Employee_Data[Hire Date]<=
+			// // SELECTEDVALUE(
+			//     date(2025,02,17)
+			//     // )
+			// )
+			
+			Return
+			// Divide(
+			    // SalCurr,
+			    Emp_Count
+			// )
+		formatString: 0
+		lineageTag: 4437f57f-7fc8-45c1-8256-1aabc1902126
+
+	measure 'Total Running Salary' = ```
+			
+			
+			Var Running_Salary=
+			CALCULATE(SUM('Monthly Salary'[SALARY]),
+			Employee_Data[Active/Inactive]="Active",
+			FILTER(ALL('Calendar'),'Calendar'[Date]<=MAX('Calendar'[Date])))
+			
+			Return
+			Running_Salary
+			
+			```
+		formatString: #,0
+		lineageTag: 02243a88-7f32-4833-a0aa-9a8413e2eb74
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column Column
+		formatString: 0
+		lineageTag: a720b410-32e8-4369-a1e0-01a8e08992e0
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measure = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 29c65cc063374b9d876b3a42eb141d2a
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

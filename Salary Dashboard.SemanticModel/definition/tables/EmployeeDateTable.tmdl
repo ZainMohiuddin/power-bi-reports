@@ -1,0 +1,185 @@
+table EmployeeDateTable
+	lineageTag: a09a9bdd-b203-43e6-86bb-d7c6670216f0
+
+	column 'Employee ID'
+		lineageTag: ddb2bd8d-9dab-4d23-b99b-539c159ff680
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Employee_Data[Employee ID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		lineageTag: 625b7be5-0683-4db6-8f3f-d8d49b2349fa
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Employee_Data[Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Department
+		lineageTag: cf199726-d1dc-4ff2-ab0a-e210f07b2154
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Employee_Data[Department]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		lineageTag: dd8c13b4-6f2a-4ab3-badd-b17ebd6945f5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Calendar[MonthName]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 7e1b8c9f-d2fc-4f38-a5fd-91f4ddb089ae
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: Calendar[Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Secondary Key' = EmployeeDateTable[Employee ID]&"-"&EmployeeDateTable[Date]
+		lineageTag: cdbb41d8-9096-4363-b218-c5979fd491e2
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'New Base Salary' = RELATED(Corrected_Salary_Change_Data[New Base Salary])
+		lineageTag: b47c669f-0c7c-44e5-ae4e-071d8fd9923f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Monthly Salary' =
+			
+			IF(EmployeeDateTable[EOM]<=EmployeeDateTable[Term Date],
+			    CALCULATE(MAX(EmployeeDateTable[New Base Salary])
+			    ,ALLEXCEPT(EmployeeDateTable,EmployeeDateTable[Employee ID],EmployeeDateTable[Date])
+			    ,EmployeeDateTable[Date]<=EARLIER(EmployeeDateTable[Date])
+			    )
+			)
+		lineageTag: 7788ccfa-4bb7-43d7-a497-47657009c052
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column EOM
+		formatString: General Date
+		lineageTag: 98dd0b8a-aa70-4b96-b108-29fbe4aa667f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Calendar[EOM]
+
+		variation Variation
+			isDefault
+			relationship: 4acf6c7d-d20b-4a9e-bed4-86f92dd67e65
+			defaultHierarchy: LocalDateTable_21eaccd1-6edf-4898-baa5-618f78f92a0d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		formatString: General Date
+		lineageTag: f6bb1818-91e8-45a6-838c-4d8738c83ef6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Calendar[Date]
+
+		variation Variation
+			isDefault
+			relationship: b8c81ddf-42d0-463e-acd0-85bec8814df4
+			defaultHierarchy: LocalDateTable_655a22a1-bf79-47e0-8602-3d285132c293.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Termination Date' = RELATED(Corrected_Salary_Change_Data[EOM Term Date])
+		formatString: General Date
+		lineageTag: e5b3393a-67a0-40e7-9fe0-02b782bc7693
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: d70f48ef-8e5e-44eb-a635-ed17b1939d6f
+			defaultHierarchy: LocalDateTable_8217d6c6-4c17-44fd-bac9-53a75718e648.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column SlabsID =
+			IF(EmployeeDateTable[Monthly Salary]<60000,1,
+			   IF(EmployeeDateTable[Monthly Salary]<80000,2,
+			   IF(EmployeeDateTable[Monthly Salary]<100000,3,
+			   IF(EmployeeDateTable[Monthly Salary]<120000,4,
+			   IF(EmployeeDateTable[Monthly Salary]<140000,5,6)))))
+		formatString: 0
+		lineageTag: 2d269399-43b6-4a55-8e14-1d1b87a7dc59
+		summarizeBy: count
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tenure of Service'
+		formatString: 0
+		lineageTag: 7c724b9e-2dcc-408b-b0e7-4824a6033f10
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: Employee_Data[Tenure of Service]
+
+		annotation SummarizationSetBy = Automatic
+
+	column TenureID
+		formatString: 0
+		lineageTag: 00c79923-9aac-4824-b989-48a0acd390a3
+		summarizeBy: count
+		isNameInferred
+		sourceColumn: Employee_Data[TenureID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Term Date' = ```
+			
+			    CALCULATE(
+			        MAX(EmployeeDateTable[Termination Date]),
+			        ALLEXCEPT(EmployeeDateTable, EmployeeDateTable[Employee ID], EmployeeDateTable[Date]),
+			        EmployeeDateTable[Date] <= EARLIER(EmployeeDateTable[Date])       
+			    )
+			
+			```
+		formatString: General Date
+		lineageTag: e1ad2dc5-f91d-45a0-957c-28487cbfa327
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 8a4bcb17-92aa-48fa-8896-38142ed56d70
+			defaultHierarchy: LocalDateTable_6ea86dd2-ad88-4552-87a3-19cb9b098419.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Active/Inactive
+		lineageTag: 0e09f90a-ac99-448d-b156-006c55fb9b77
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Employee_Data[Active/Inactive]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition EmployeeDateTable = calculated
+		mode: import
+		source = ```
+				
+				CROSSJOIN (
+				    
+				    SUMMARIZE(Employee_Data,Employee_Data[Employee ID],Employee_Data[Name],Employee_Data[Tenure of Service],Employee_Data[TenureID],Employee_Data[Active/Inactive],Employee_Data[Department])
+				    
+				    , SUMMARIZE('Calendar','Calendar'[Date],'Calendar'[EOM],'Calendar'[Year],'Calendar'[MonthName])
+				)
+				```
+
+	annotation PBI_Id = 9b9d486e75a945fe9441dfa647649601
+

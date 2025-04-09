@@ -1,0 +1,47 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Employee_Data","Terminated_Employee_Data","Corrected_Salary_Change_Data","dDepartment","Unique_ID","Salary Slabs","Tenure Slabs","Terminated_Employee"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.141.1451.0 (25.03)+5007b75f0f7edbed506e31fcb76584cd6d711788
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Employee_Data
+ref table DateTableTemplate_1fd1ca81-9142-4dcc-a94a-29046e689de4
+ref table Terminated_Employee_Data
+ref table LocalDateTable_b11304a6-2c2a-4146-b8f3-b964b8affa6d
+ref table Corrected_Salary_Change_Data
+ref table LocalDateTable_02d3e7aa-a8d3-464a-8751-d7f737b0042a
+ref table LocalDateTable_a090b6b9-bb6b-4d1c-9252-0017c2113420
+ref table dDepartment
+ref table Unique_ID
+ref table LocalDateTable_45b256de-6817-432a-a1e2-9b71d7e3c1f2
+ref table Calendar
+ref table Measure
+ref table 'Salary Slabs'
+ref table EmployeeDateTable
+ref table 'Monthly Salary'
+ref table 'Tenure Slabs'
+ref table LocalDateTable_f6e98b68-ca86-42da-808e-a75e1d6c1566
+ref table LocalDateTable_6ea86dd2-ad88-4552-87a3-19cb9b098419
+ref table LocalDateTable_1318d568-522b-4eb0-8b7e-376f462a181a
+ref table LocalDateTable_8217d6c6-4c17-44fd-bac9-53a75718e648
+ref table Terminated_Employee
+ref table LocalDateTable_9d5fca0c-7d8f-4891-9374-3cd83ec9f75a
+ref table LocalDateTable_f51c6ea9-47d4-4e9b-94bd-cb0845e1ba04
+ref table LocalDateTable_495587dd-75b8-4daf-9834-adf80056c72e
+ref table LocalDateTable_d9e6c46a-1ebb-4a79-a413-bcf53c877250
+ref table LocalDateTable_655a22a1-bf79-47e0-8602-3d285132c293
+ref table LocalDateTable_474f8782-69a9-4939-997b-30ed3c3dfb57
+ref table LocalDateTable_21eaccd1-6edf-4898-baa5-618f78f92a0d
+
+ref cultureInfo en-US
+

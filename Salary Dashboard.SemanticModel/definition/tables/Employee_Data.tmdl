@@ -1,0 +1,112 @@
+table Employee_Data
+	lineageTag: 95770f4e-199c-465d-a615-0f9bd7706c8f
+
+	column 'Employee ID'
+		dataType: string
+		lineageTag: abad37e9-8fe8-43f8-97aa-12d452636c6e
+		summarizeBy: none
+		sourceColumn: Employee ID
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Name
+		dataType: string
+		lineageTag: f2775331-7157-458f-b8f6-b82af5de4878
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Salary
+		dataType: double
+		formatString: #,0
+		lineageTag: cf0e77d8-9ca5-4895-bb2f-b3b484913c0a
+		summarizeBy: sum
+		sourceColumn: Salary
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column Department
+		dataType: string
+		lineageTag: 13b0aa63-ef84-4313-a3e3-db5831f8a460
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Hire Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 95dc8285-4646-4e1e-b779-a27898b6bc99
+		summarizeBy: none
+		sourceColumn: Hire Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Hire Year' = YEAR(Employee_Data[Hire Date])
+		formatString: 0
+		lineageTag: a186da44-e5ce-473c-84bc-46ffefc24c43
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column SlabsID =
+			IF(Employee_Data[Salary]<60000,1,
+			   IF(Employee_Data[Salary]<80000,2,
+			   IF(Employee_Data[Salary]<100000,3,
+			   IF(Employee_Data[Salary]<120000,4,
+			   IF(Employee_Data[Salary]<140000,5,6)))))
+		formatString: 0
+		lineageTag: 35e56851-f68d-47a6-9744-e8aab90b427a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tenure of Service' = INT ( YEARFRAC ( Employee_Data[Hire Date], TODAY () ) )
+		formatString: 0
+		lineageTag: 575e99f9-c339-452d-9010-eef0ad5fc05b
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column TenureID = ```
+			IF([Tenure of Service]<1, 1, 
+			           IF([Tenure of Service]<=3, 2,
+			           IF([Tenure of Service]<=5, 3, 
+			           IF([Tenure of Service]<=10, 4,
+			           IF([Tenure of Service]<=15, 5,6)))))
+			```
+		formatString: 0
+		lineageTag: 3fd9aaca-fa05-4918-acb2-500452480f54
+		summarizeBy: count
+
+		annotation SummarizationSetBy = Automatic
+
+	column Active/Inactive = IF(RELATED(Terminated_Employee[Term Date])<>BLANK(),"Inactive","Active")
+		lineageTag: 294cf86f-7d64-4c53-8b71-489d82caf98c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Employee_Data = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("D:\ZM Analytics\Freelance Projects\Mine\Marc Cohen\Employee_Data.xlsx"), null, true),
+				    Employee_Data_Sheet = Source{[Item="Employee_Data",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Employee_Data_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Employee ID", Int64.Type}, {"Name", type text}, {"Salary", type number}, {"Department", type text}, {"Hire Date", type date}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Hire Date", "Department", "Salary", "Name", "Employee ID"})
+				in
+				    #"Removed Other Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
